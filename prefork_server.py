@@ -10,4 +10,6 @@ def start(host, port, root, cores):
         client_connection, client_address = soc.accept()
         request = client_connection.recv(1024)
         print request
-        do_response(client_connection, request, root)
+        if request:
+            do_response(client_connection, request, root)
+            client_connection.close()
