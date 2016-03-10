@@ -1,5 +1,9 @@
 import argparse
 import os
+from prefork_server import start
+
+HOST = 'localhost'
+PORT = 80
 
 
 def get_param():
@@ -9,3 +13,7 @@ def get_param():
     args = parser.parse_args()
     return args.r, args.c
 
+root, cores = get_param()
+
+if __name__ == '__main__':
+    start(HOST, PORT, root, cores)
