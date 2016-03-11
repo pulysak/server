@@ -16,6 +16,7 @@ CONTENT_TYPE = {
 SERVER = 'Server: MyServer \r\n'
 CONNECTION = 'Connection: keep-alive \r\n'
 
+
 def parse_request(request):
     data = request.split('\r\n')[0].split(' ')
     method = data[0]
@@ -41,7 +42,7 @@ def make_response(request, root):
             if os.path.isfile(root+uri):
                 code = '200'
                 reason = ' OK\r\n'
-                content_type = 'Content-Type: ' + CONTENT_TYPE[uri.split('.')[-1]] + '\r\n\r\n'
+                content_type = 'Content-Type: ' + CONTENT_TYPE[(uri.split('.')[-1]).lower()] + '\r\n\r\n'
                 content_length = 'Content-Length: ' + str(os.stat(root+uri).st_size) + '\r\n'
                 print root+uri
                 if method == 'GET':
@@ -78,14 +79,16 @@ def make_response(request, root):
     return response, body
 
 
-def do_response(connection, request, root):
-    response, body = make_response(request, root)
-    print response
-    connection.send(response)
-    if body:
-        chunk = body.read(1024)
-        while (chunk):
-                connection.send(chunk)
-                chunk = body.read(1024)
-        body.close()
+def do_response(connection, root):
+    request = connection.recv(1024)
+    if request:
+        response, body = make_response(request, root)
+        print response
+        connection.send(response)
+        if body:
+            chunk = body.read(1024)
+            while (chunk):
+                    connection.send(chunk)
+                    chunk = body.read(1024)
+            body.close()
 
