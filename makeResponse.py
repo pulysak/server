@@ -81,14 +81,13 @@ def make_response(request, root):
 
 def do_response(connection, root):
     request = connection.recv(1024)
-    if request:
-        response, body = make_response(request, root)
-        print response
-        connection.send(response)
-        if body:
-            chunk = body.read(1024)
-            while (chunk):
-                    connection.send(chunk)
-                    chunk = body.read(1024)
-            body.close()
+    response, body = make_response(request, root)
+    print response
+    connection.send(response)
+    if body:
+        chunk = body.read(1024)
+        while (chunk):
+                connection.send(chunk)
+                chunk = body.read(1024)
+        body.close()
 
