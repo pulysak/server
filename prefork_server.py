@@ -1,6 +1,5 @@
 import os
 import socket
-import select
 import time
 from makeResponse import do_response
 
