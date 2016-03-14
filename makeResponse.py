@@ -18,14 +18,18 @@ CONNECTION = 'Connection: keep-alive \r\n'
 
 
 def parse_request(request):
-    data = request.split('\r\n')[0].split(' ')
-    method = data[0]
-    uri = data[1]
-    uri = urllib.unquote(uri).decode('utf8')
-    if '?' in uri:
-        uri = uri.split('?')[0]
-    httpv = data[2]
-    return method, uri, httpv
+    try:
+        print request
+        data = request.split('\r\n')[0].split(' ')
+        method = data[0]
+        uri = data[1]
+        uri = urllib.unquote(uri).decode('utf8')
+        if '?' in uri:
+            uri = uri.split('?')[0]
+        httpv = data[2]
+        return method, uri, httpv
+    except:
+        return 'NOTGETorHEAD', 'not important', 'HTTP/1.1'
 
 
 def make_response(request, root):
@@ -82,7 +86,6 @@ def make_response(request, root):
 def do_response(connection, root):
     request = connection.recv(1024)
     response, body = make_response(request, root)
-    print response
     connection.send(response)
     if body:
         chunk = body.read(1024)
