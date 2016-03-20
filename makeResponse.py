@@ -38,7 +38,7 @@ def make_response(request, root):
     content_type = ''
     content_length = ''
     if method in ['GET', 'HEAD']:
-        if '..' in uri:
+        if ('..' in uri) and (uri.split('.')[-1] not in CONTENT_TYPE.keys()):
             code = '400 '
             reason = ' Bad Request \r\n'
             body = False
