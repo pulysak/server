@@ -12,6 +12,7 @@ CONTENT_TYPE = {
     'png': 'image/png',
     'gif': 'image/gif',
     'swf': 'application/x-shockwave-flash',
+    'other': 'application/octet- stream',
 }
 SERVER = 'Server: MyServer \r\n'
 CONNECTION = 'Connection: keep-alive \r\n'
@@ -46,7 +47,10 @@ def make_response(request, root):
             if os.path.isfile(root+uri):
                 code = '200'
                 reason = ' OK\r\n'
-                content_type = 'Content-Type: ' + CONTENT_TYPE[(uri.split('.')[-1]).lower()] + '\r\n\r\n'
+                try:
+                    content_type = 'Content-Type: ' + CONTENT_TYPE[(uri.split('.')[-1]).lower()] + '\r\n\r\n'
+                except:
+                    content_type = 'Content-Type: ' + CONTENT_TYPE['other'] + '\r\n\r\n'
                 content_length = 'Content-Length: ' + str(os.stat(root+uri).st_size) + '\r\n'
                 print root+uri
                 if method == 'GET':
